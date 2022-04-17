@@ -1,8 +1,5 @@
 // ./src/components/Viewer.js
 
-// Imports
-import React from "react";
-
 // Viewer segment container
 export default function Viewer({ svgData }) {
     // Contains the SVG display structure for the application

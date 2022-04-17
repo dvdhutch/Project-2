@@ -11,7 +11,7 @@ import SVGUploadForm from "./components/SVGUploadForm";
 
 export default function App() {
     // Contains all individual components as well as GUN instance and control
-
+    
     // Initialize gun
     const gun = GUN();
 
@@ -39,46 +39,41 @@ export default function App() {
             </svg>`,
     });
 
-     // List of SVGs displayed
-     const [svgNameList, setSVGNameList] = useState([
-        // Default list of SVGs
-        "Ethereum Logo",
-    ]);
+// List of SVGs displayed
+const [svgNameList, setSVGNameList] = useState([
+    // Default list of SVGs
+    "Ethereum Logo",
+]);
 
-    // Callback function to update the SVG from the selector
-    const changeCurrentSVG = (selectionTitle) => {
-        // For now, do nothing of importance
-        console.log(`Selected ${selectionTitle}`);
-    };
+// Callback function to update the SVG from the selector
+const changeCurrentSVG = (selectionTitle) => {
+    // Ensure that the previously selected SVG is pushed to GUN
+    gun.get(svg.title).put({
+        title: svg.title,
+        svg: svg.svg,
+    });
 
-    // Callback function to update the SVG within a child component
-    const updateSVG = (newSVG) => {
-        // Update the GUN database with the new SVG
-        gun.get(newSVG.title).put({
-            title: newSVG.title,
-            svg: newSVG.svg,
+    // Get the new SVG from GUN and update the state
+    gun.get(selectionTitle).on((data, key) => {
+        setSVG({
+            title: data.title,
+            svg: data.svg,
         });
+    });
+};
 
-        // Update the SVG name list
-        setSVGNameList(svgNameList.concat(newSVG.title));
-    };
+// Callback function to update the SVG within a child component
+const updateSVG = (newSVG) => {
+    // Update the GUN database with the new SVG
+    gun.get(newSVG.title).put({
+        title: newSVG.title,
+        svg: newSVG.svg,
+    });
 
-    // Callback function to update the SVG from the selector
-    const changeCurrentSVG = (selectionTitle) => {
-        // Ensure that the previously selected SVG is pushed to GUN
-        gun.get(svg.title).put({
-            title: svg.title,
-            svg: svg.svg,
-        });
+    // Update the SVG name list
+    setSVGNameList(svgNameList.concat(newSVG.title));
+};
 
-        // Get the new SVG from GUN and update the state
-        gun.get(selectionTitle).on((data, key) => {
-            setSVG({
-                title: data.title,
-                svg: data.svg,
-            });
-        });
-    };
 
     // Returns a JSX component for the overall application
     return (
